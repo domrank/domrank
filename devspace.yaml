@@ -1,0 +1,39 @@
+version: v2beta1
+name: domrank
+
+deployments:
+  domrank:
+    helm:
+      values:
+        containers:
+          - image: username/app
+
+dev:
+  domrank:
+    imageSelector: username/app
+    devImage: mcr.microsoft.com/devcontainers/go:1.25
+    command: 
+    - bash
+    - -c
+    - |
+      sed -i 's|# alias l|alias l|g' /root/.bashrc
+      sleep infinity
+    workingDir: /go/src/domrank
+    ssh:
+      localHostname: domrank.devspace
+    ports:
+      - port: 9000:9000
+    sync:
+      - path: ./:/go/src/domrank
+      - path: "${DEVSPACE_USER_HOME}/.gitconfig:/root/.gitconfig"
+        file: true
+        disableDownload: true
+    proxyCommands:
+      - gitCredentials: true
+      - command: devspace
+      - command: kubectl
+      - command: helm
+pipelines:
+  dev: |-
+    run_default_pipeline dev
+    code --folder-uri vscode-remote://ssh-remote+domrank.devspace/go/src/domrank
