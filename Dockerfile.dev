@@ -8,6 +8,8 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+COPY .devspace/dev-image/vscode-server/extensions/ /root/.vscode-server/extensions/
+
 RUN grep -qxF "alias ll='ls -alF'" /root/.bashrc || echo "alias ll='ls -alF'" >> /root/.bashrc
 
 WORKDIR /go/src/domrank
