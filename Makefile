@@ -12,17 +12,13 @@ down:
 status:
 	@./hack/devspace-service.sh status
 
-.PHONY: check-windows-ssh
-check-windows-ssh:
-	./hack/sync-devspace-ssh-to-windows.sh check
-
-.PHONY: sync-windows-ssh
-sync-windows-ssh: check-windows-ssh
-	./hack/sync-devspace-ssh-to-windows.sh
+.PHONY: windows-ssh
+windows-ssh:
+	./hack/windows-ssh.sh
 
 .PHONY: code
-code: sync-windows-ssh
-	code --folder-uri vscode-remote://ssh-remote+domrank.devspace/go/src/domrank
+code: windows-ssh
+	./hack/code.sh
 
 .PHONY: ssh
 ssh:
@@ -30,8 +26,7 @@ ssh:
 
 .PHONY: dev-image
 dev-image:
-	docker build -f Dockerfile.dev -t $(DEV_IMAGE):latest .
-	docker push $(DEV_IMAGE):latest
+	DEV_IMAGE=$(DEV_IMAGE) ./hack/dev-image.sh
 
 .PHONY: run
 run:

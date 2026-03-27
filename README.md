@@ -16,7 +16,7 @@ The default port is `9000`. In deployment environments, you can override it with
 
 `make up` uses a prebuilt development image.
 
-`domrank-dev` is a shared development base image. `make dev-image` is responsible for building and pushing it, and DevSpace only consumes it via `devImage`.
+`domrank-dev` is a shared development base image. `make dev-image` runs `hack/dev-image.sh`, which stages the newest local `.vscode-server/extensions` directory for each recommendation in `.vscode/extensions.json`, then builds and pushes the image. DevSpace only consumes it via `devImage`.
 
 Run the following only the first time, or whenever the dev image needs to be rebuilt:
 
@@ -41,18 +41,12 @@ Then open VS Code from another terminal:
 make code
 ```
 
-`make code` syncs the DevSpace SSH entry and key material to the Windows-side SSH config just before launching VS Code. You can also use it later to reopen VS Code without restarting DevSpace.
+`make code` syncs the DevSpace SSH entry and key material to the Windows-side SSH config, verifies SSH connectivity, and then launches VS Code. You can also use it later to reopen VS Code without restarting DevSpace.
 
-To run only the SSH sync step:
-
-```bash
-make sync-windows-ssh
-```
-
-To verify SSH connectivity (and print remote hostname) without copying anything:
+To sync Windows-side SSH config and then verify SSH connectivity:
 
 ```bash
-make check-windows-ssh
+make windows-ssh
 ```
 
 ## Structure
