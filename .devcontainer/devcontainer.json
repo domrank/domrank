@@ -1,0 +1,28 @@
+{
+  "name": "domrank",
+  "image": "mcr.microsoft.com/devcontainers/go:1.25",
+  "runArgs": [
+    "--name=devcontainer-domrank"
+  ],
+  "mounts": [
+    "source=${localEnv:HOME}/.codex,target=/root/.codex,type=bind"
+  ],
+  "initializeCommand": [
+    "make",
+    "down"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "openai.chatgpt",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  },
+  // "forwardPorts": [9000],
+  "postCreateCommand": "go version",
+  "remoteUser": "root"
+}

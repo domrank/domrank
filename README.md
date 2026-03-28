@@ -2,55 +2,30 @@
 
 The initial web project for `domrank.org`.
 
-For now, the application itself stays as a simple `Hello World` Go server so we can focus on the DevSpace and image workflow.
+The repository currently focuses on a local Dev Container workflow for development.
 
-## Run
+## Dev Container
 
-```bash
-make run
-```
+Open the repository from the WSL/Linux filesystem and then reopen it in the container with the VS Code Dev Containers extension.
 
-The default port is `9000`. In deployment environments, you can override it with the `PORT` environment variable.
+The container definition lives in `.devcontainer/devcontainer.json`. It uses the published `mcr.microsoft.com/devcontainers/go:1.25` image and adds the Node feature.
 
-## DevSpace
+The container keeps the fixed Docker name `devcontainer-domrank`. During initialization, `initializeCommand` runs `make down` on the host so rebuilds always clear any existing container with that name before recreating it.
 
-`make up` uses a prebuilt development image.
-
-`domrank-dev` is a shared development base image. `make dev-image` runs `hack/dev-image.sh`, which stages the newest local `.vscode-server/extensions` directory for each recommendation in `.vscode/extensions.json`, then builds and pushes the image. DevSpace only consumes it via `devImage`.
-
-Run the following only the first time, or whenever the dev image needs to be rebuilt:
-
-```bash
-make dev-image
-```
-
-This command runs `docker build` with `Dockerfile.dev` and pushes `ghcr.io/domrank/domrank-dev:latest`.
-Before running it, make sure `docker login ghcr.io` is already configured.
-
-After that, `make up` can quickly reuse the `Go + Node + pnpm` environment.
-
-If you are using WSL with Windows VS Code, start DevSpace first:
+If you prefer the CLI instead of the VS Code command:
 
 ```bash
 make up
 ```
 
-Then open VS Code from another terminal:
+To remove the current dev container manually from the host:
 
 ```bash
-make code
-```
-
-`make code` syncs the DevSpace SSH entry and key material to the Windows-side SSH config, verifies SSH connectivity, and then launches VS Code. You can also use it later to reopen VS Code without restarting DevSpace.
-
-To sync Windows-side SSH config and then verify SSH connectivity:
-
-```bash
-make windows-ssh
+make down
 ```
 
 ## Structure
 
-- `main.go`: simple `Hello World` web server
-- `Dockerfile.dev`: development image with `Go + Node + pnpm`
-- `devspace.yaml`: DevSpace configuration and dev image pipeline
+- `.devcontainer/devcontainer.json`: Dev Container configuration
+- `Makefile`: local helpers for bringing the dev container up or down
+- `.vscode/extensions.json`: recommended VS Code extensions inside the container
